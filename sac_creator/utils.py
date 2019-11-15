@@ -1,5 +1,6 @@
 from obspy import Trace, Stream, UTCDateTime
 import numpy as np
+import os
 from datetime import datetime
 from obspy.core.util.attribdict import AttribDict
 
@@ -25,7 +26,7 @@ def mag_type(val):
   else:
     return 0
   
-def txt2sac(txt):
+def txt2sac(txt,output_dir = os.getcwd()):
   ''' This function will convert txt file to SAC file'''
   with open(txt) as eqfile:
       head = [next(eqfile) for x in range(14)]
@@ -109,17 +110,17 @@ def txt2sac(txt):
   hd['channel'] = 'HGE'
   tracee.stats = hd
   st = Stream(traces=[tracee])
-  st.write(st[0].id + '.SAC', format='SAC')
+  st.write(os.path.join(output_dir,st[0].id + '.SAC'), format='SAC')
   #North
   tracen = Trace(np.asarray(n))
   hd['channel'] = 'HGN'
   tracen.stats = hd
   st = Stream(traces=[tracen])
-  st.write(st[0].id + '.SAC', format='SAC')
+  st.write(os.path.join(output_dir,st[0].id + '.SAC'), format='SAC')
   #Vertical
   tracez = Trace(np.asarray(z))
   hd['channel'] = 'HGZ'
   tracez.stats = hd
   st = Stream(traces=[tracez])
-  st.write(st[0].id + '.SAC', format='SAC')
+  st.write(os.path.join(output_dir,st[0].id + '.SAC'), format='SAC')
   return
