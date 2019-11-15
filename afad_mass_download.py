@@ -1,8 +1,3 @@
-#import mechanize, re, os, requests, warnings, urllib.request
-#import pandas as pd
-#from bs4 import BeautifulSoup 
-from datetime import datetime
-#warnings.filterwarnings("ignore")
 from utils import *
 
 # Open website
