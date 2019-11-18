@@ -5,14 +5,14 @@ from datetime import datetime
 from obspy.core.util.attribdict import AttribDict
 
 def mag_type(val):
-  val = val.lower()
   ''''imagtyp': I    Magnitude type:
   * IMB (52): Bodywave Magnitude
   * IMS (53): Surfacewave Magnitude
   * IML (54): Local Magnitude
   * IMW (55): Moment Magnitude
   * IMD (56): Duration Magnitude
-  * IMX (57): User Defined Magnitude''',
+  * IMX (57): User Defined Magnitude'''
+  val = val.lower()
   if val == 'mb':
     return 52
   elif val == 'ms':
@@ -25,11 +25,50 @@ def mag_type(val):
     return 56
   else:
     return 0
+
+def mag_seperator(val):
+  ''' Checks if multiple magnitude types are associated with the earthquake.
+  If so, following hierarchy is considered:
+  1. Mw
+  2. Ml
+  3. Ms
+  4. Md
+  5. Mb'''
+  val = val.lower()
+  mags = val.split(',')
+  mags = [w.replace('\r', '') for w in mags]
+  mags = [w.replace('\n', '') for w in mags]
+  magnitudes = []; mag_types = [];
+  for mag in mags:
+    if mag[0] == ' ':
+      mag = mag[1:]
+    mag,imagtyp = mag.split(' ')
+    magnitudes.append(mag)
+    mag_types.append(imagtyp)
+  if 'mw' in mag_types:
+    idx = mag_types.index('mw')
+    return magnitudes[idx], mag_type(mag_types[idx])
+  elif 'ml' in mag_types:
+    idx = mag_types.index('ml')
+    return magnitudes[idx], mag_type(mag_types[idx])
+  elif 'ms' in mag_types:
+    idx = mag_types.index('ms')
+    return magnitudes[idx], mag_type(mag_types[idx])
+  elif 'md' in mag_types:
+    idx = mag_types.index('md')
+    return magnitudes[idx], mag_type(mag_types[idx])
+  elif 'mb' in mag_types:
+    idx = mag_types.index('mb')
+    return magnitudes[idx], mag_type(mag_types[idx])
+    return
   
 def txt2sac(txt,output_dir = os.getcwd()):
   ''' This function will convert txt file to SAC file'''
   with open(txt) as eqfile:
-      head = [next(eqfile) for x in range(14)]
+    if os.stat(txt).st_size == 0:
+      print(txt + ' is empty')
+      return
+    head = [next(eqfile) for x in range(14)]
       
   head = [line.rstrip('\n') for line in head]
   hd =  AttribDict()
@@ -45,16 +84,21 @@ def txt2sac(txt,output_dir = os.getcwd()):
   coors = coors.replace('N','')
   coors = coors.replace('E','')
   evla,evlo = coors.split('-')
-  hd['sac'].evla = float(evla); hd['sac'].evlo = float(evlo)
+  hd['sac'].evla = float(evla.replace(',','.')); hd['sac'].evlo = float(evlo.replace(',','.'))
   # Retrieve EVDP
   _,depth = head[4].split(':')
   evdp = depth.replace(' ','')
   hd['sac'].evdp = float(evdp)
   # Retrieve MAG
   _,mags = head[5].split(':')
-  _, mag,imagtyp = mags.split(' ')
-  hd['sac'].mag = float(mag)
-  hd['sac'].imagtyp = mag_type(imagtyp)
+  # Check if multiple Magnitude types are associated with the earthquake
+  if ',' in mags:
+    mag,imagtyp = mag_seperator(mags)
+    hd['sac'].imagtyp = imagtyp
+  else:
+    _, mag,imagtyp = mags.split(' ')
+    hd['sac'].imagtyp = mag_type(imagtyp)
+  hd['sac'].mag = float(mag.replace(',','.'))
   # Retrieve Station Information
   # Assign Network
   hd['network'] = 'AFAD'
@@ -71,11 +115,11 @@ def txt2sac(txt,output_dir = os.getcwd()):
   coors = coors.replace('N','')
   coors = coors.replace('E','')
   stla,stlo = coors.split('-')
-  hd['sac'].stla = float(stla); hd['sac'].stlo = float(stlo)
+  hd['sac'].stla = float(stla.replace(',','.')); hd['sac'].stlo = float(stlo.replace(',','.'))
   # Retrieve STEL
   _,el = head[8].split(':')
   stel = el.replace(' ','')
-  hd['stel'] = float(stel)
+  hd['stel'] = float(stel.replace(',','.'))
   # Retrieve Record Information
   # Retrieve Recordtime
   s = ''.join(i for i in head[11] if i.isdigit())
@@ -89,7 +133,7 @@ def txt2sac(txt,output_dir = os.getcwd()):
   # Retrieve DELTA
   _,dt = head[13].split(':')
   delta = dt.replace(' ','')
-  hd['delta'] = float(delta)
+  hd['delta'] = float(delta.replace(',','.'))
   hd['sampling_rate'] = 1/hd['delta']
   hd['endtime'] = hd['starttime'] + hd['npts']*hd['delta']
   hd['sac'].lcalda = 1; hd['sac'].lovrok = 1
