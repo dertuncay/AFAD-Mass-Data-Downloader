@@ -64,7 +64,7 @@ def mag_seperator(val):
   
 def txt2sac(txt,output_dir = os.getcwd()):
   ''' This function will convert txt file to SAC file'''
-  with open(txt) as eqfile:
+  with open(txt,encoding='iso-8859-9') as eqfile:
     if os.stat(txt).st_size == 0:
       print(txt + ' is empty')
       return
@@ -139,7 +139,7 @@ def txt2sac(txt,output_dir = os.getcwd()):
   hd['sac'].lcalda = 1; hd['sac'].lovrok = 1
   eqfile.close()
   # Read Waveform
-  with open(txt) as eqfile:
+  with open(txt,encoding='iso-8859-9') as eqfile:
     wfs = eqfile.readlines()[18:]
   wfs = [line.rstrip('\n') for line in wfs]
   wfs = [line.split(' ') for line in wfs]
