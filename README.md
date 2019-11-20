@@ -42,13 +42,11 @@ MB between (eg. 2.3-4.55 *MIN TO MAX)
 
 # Text to SAC
 
-Downloaded waveforms can be converted by using covert2tosac.py
+Downloaded waveforms can be converted by using text2sac.py
 
-Inputs of the txt2sac are:
+Usage:
 
-Input name: Name of the .txt file. If the function is called from another directory, full path should be written as input.
-
-output_dir: Full path of the desired output folder. If not specified, current working directory will be used.
+python text2sac.py -o output_dir filename(s)
 
 # Dependancies
 
