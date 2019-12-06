@@ -65,5 +65,5 @@ Text to SAC has dependancies on the following packages:
 [numpy](https://pypi.org/project/numpy/), 
 [obspy](https://github.com/obspy/obspy/wiki)
 
-AFAD Mass Downloader and Text to SAC work work in Python 3.x.
+AFAD Mass Downloader and Text to SAC work in Python 3.x.
 
