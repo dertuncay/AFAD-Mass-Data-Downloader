@@ -101,11 +101,11 @@ def txt2sac(txt,output_dir = os.getcwd()):
   hd['sac'].mag = float(mag.replace(',','.'))
   # Retrieve Station Information
   # Assign Network
-  hd['network'] = 'AFAD'
+  hd['network'] = 'TK'
   # Assing Location
   hd['location'] = 00
   # Retrieve KSTNM
-  _,stnm = head[8].split(':')
+  _,stnm = head[6].split(':')
   kstnm = stnm.replace(' ','')
   hd['station'] = kstnm
   # Retrieve STLA, STLO
