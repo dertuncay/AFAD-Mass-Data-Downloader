@@ -40,6 +40,9 @@ MW between (eg. 2.3-4.55 *MIN TO MAX)
 
 MB between (eg. 2.3-4.55 *MIN TO MAX)
 
+* AFAD mostly calculates ML. However, if MW is calculated, ML is not given. Beware of this fact and provide the minimum limit of ML and MW.
+* Search engine of AFAD do not provide earthquakes for a single day. Do not fill the start and end date with the same date.
+
 # Text to SAC
 
 Downloaded waveforms can be converted by using text2sac.py
