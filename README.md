@@ -1,3 +1,6 @@
+# AFAD changed the website. Updates will be done soon
+
+
 # AFAD-Mass-Data-Downloader
 
 A code for downloading information about earthquakes along with the waveforms (optional) 
